@@ -1,0 +1,65 @@
+package br.com.dio.desafio.Dominio;
+
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+
+public class Dev {
+    private  String nome;
+    private LinkedHashSet<Conteudo> conteudoInscritos = new LinkedHashSet<>();
+    private LinkedHashSet<Conteudo> conteudosConcluidos= new  LinkedHashSet<>();
+
+    public  void inscreverBootcamp(Bootcamp bootcamp){
+        this.conteudoInscritos.addAll(bootcamp.getConteudos());
+        bootcamp.getDevsInscritos().add(this);
+    }
+    public void progredir(){
+        Optional<Conteudo> conteudo =  this.conteudoInscritos.stream().findFirst();
+        if(conteudo.isPresent()){
+            this.conteudosConcluidos.add(conteudo.get());
+            this.conteudoInscritos.remove(conteudo.get());
+        } else {
+            System.out.println("Você não está matriculado em nenhum conteúdo!");
+        }
+    }
+    public double calcularTotalXp(){
+        return this.conteudosConcluidos.stream().mapToDouble(conteudo -> conteudo.calcularxp()).sum();
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public LinkedHashSet<Conteudo> getConteudoInscritos() {
+        return conteudoInscritos;
+    }
+
+    public void setConteudoInscritos(LinkedHashSet<Conteudo> conteudoInscritos) {
+        this.conteudoInscritos = conteudoInscritos;
+    }
+
+    public LinkedHashSet<Conteudo> getConteudosConcluidos() {
+        return conteudosConcluidos;
+    }
+
+    public void setConteudosConcluidos(LinkedHashSet<Conteudo> conteudosConcluidos) {
+        this.conteudosConcluidos = conteudosConcluidos;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Dev dev = (Dev) o;
+        return Objects.equals(nome, dev.nome) && Objects.equals(conteudoInscritos, dev.conteudoInscritos) && Objects.equals(conteudosConcluidos, dev.conteudosConcluidos);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nome, conteudoInscritos, conteudosConcluidos);
+    }
+}
